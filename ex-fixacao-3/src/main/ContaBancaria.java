@@ -1,49 +1,42 @@
 package main;
 
 public class ContaBancaria {
-    private String numConta;
+    private static Integer QUANTIDADE_CONTAS = 0;
+    private final String numConta;
     private Double saldo;
 
-    public ContaBancaria(String numConta) {
-        this.numConta = numConta;
-        this.saldo = 0.0;
+    public ContaBancaria(Double saldo) {
+        this.saldo = saldo;
+
+        QUANTIDADE_CONTAS++;
+        this.numConta = QUANTIDADE_CONTAS.toString().formatted("%06d");
     }
 
-    public void sacar(Double valor) throws Exception {
-        validarSaque(valor);
-        efetuarSaque(valor);
+    public void sacar(Double valor) {
+        if (valor <= 0.0 || valor > saldo) {
+            System.out.println("Não foi possível realizar o saque, valor não permitido!");
+            return;
+        }
+
+        this.saldo -= valor;
+        System.out.println("Saque realizado com sucesso!");
     }
 
-    public boolean depositar(Double valor) {
-        return false;
+    public void depositar(Double valor) {
+        if (valor <= 0.0) {
+            System.out.println("Não foi possível realizar o depósito, valor não permitido!");
+            return;
+        }
+
+        this.saldo += valor;
+        System.out.println("Depósito realizado com sucesso!");
+    }
+
+    public Double verificarSaldo() {
+        return this.saldo;
     }
 
     public String getNumConta() {
         return numConta;
-    }
-
-    public void setNumConta(String numConta) {
-        this.numConta = numConta;
-    }
-
-    public Double getSaldo() {
-        return saldo;
-    }
-
-    private void validarSaque(Double valor) throws Exception {
-        if (valor <= 0.0)
-            throw new Exception("O valor para saque não pode ser negativo!");
-
-        if (valor > saldo)
-            throw new Exception("O valor para saque não pode ser maior que o saldo atual da conta!");
-
-    }
-
-    private void efetuarSaque(Double valor) {
-        setSaldo(saldo - valor);
-    }
-
-    public void setSaldo(Double saldo) {
-        this.saldo = saldo;
     }
 }
